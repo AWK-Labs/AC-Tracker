@@ -4,6 +4,7 @@ import { MapView } from "@/components/MapView";
 import { AircraftPanel } from "@/components/AircraftPanel";
 import { ControlPanel } from "@/components/ControlPanel";
 import { LocationInput } from "@/components/LocationInput";
+import { ClosestFlightOverlay } from "@/components/ClosestFlightOverlay";
 import { useAircraftData } from "@/hooks/useAircraftData";
 import { RadarLocation, RadarSettings } from "@/types";
 
@@ -31,6 +32,7 @@ export default function App() {
   const [selectedHex, setSelectedHex] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<PanelTab>("location");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [closestOpen, setClosestOpen] = useState(false);
 
   const { aircraft, trails, loading, error, lastUpdated, totalCount, refetch } = useAircraftData(
     location,
@@ -115,6 +117,22 @@ export default function App() {
                 ↺
               </button>
             </>
+          )}
+          {location && (
+            <button
+              onClick={() => setClosestOpen(true)}
+              className="text-xs border rounded px-2 py-1 transition-all hover:opacity-100"
+              style={{
+                borderColor: colors.accent,
+                color: colors.accent,
+                background: `${colors.accent}15`,
+                fontFamily: "'Courier New', monospace",
+                opacity: 0.85,
+              }}
+              title="Closest flight pop-out"
+            >
+              ✈ CLOSEST
+            </button>
           )}
           <button
             onClick={() => setSidebarOpen((v) => !v)}
@@ -256,6 +274,15 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* Closest Flight Overlay */}
+      {closestOpen && location && (
+        <ClosestFlightOverlay
+          aircraft={aircraft}
+          location={location}
+          onClose={() => setClosestOpen(false)}
+        />
+      )}
     </div>
   );
 }
