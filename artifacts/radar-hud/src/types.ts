@@ -55,7 +55,7 @@ export interface RadarSettings {
   showLabels: boolean;
   showTrails: boolean;
   radarMode: "sweep" | "static";
-  colorScheme: "green" | "blue" | "amber";
+  colorScheme: "green" | "blue" | "amber" | "map";
 }
 
 export interface TrailPoint {

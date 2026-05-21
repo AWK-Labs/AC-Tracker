@@ -158,16 +158,17 @@ export function ControlPanel({ settings, onChange, colorScheme }: Props) {
       <div className="border-t opacity-10" style={{ borderColor: colors.accent }} />
       <div className="text-xs font-bold tracking-widest uppercase opacity-40">Color</div>
 
-      <div className="flex gap-2">
+      <div className="grid grid-cols-2 gap-1.5">
         {([
           { key: "green", color: "#00ff3c", label: "PPI" },
           { key: "blue", color: "#3a8fff", label: "NAVY" },
           { key: "amber", color: "#ffaa00", label: "ATCO" },
+          { key: "map", color: "#4fc3f7", label: "MAP" },
         ] as const).map((s) => (
           <button
             key={s.key}
             onClick={() => toggle("colorScheme", s.key)}
-            className="flex-1 py-1.5 text-xs border rounded transition-all font-mono"
+            className="py-1.5 text-xs border rounded transition-all font-mono"
             style={{
               borderColor: settings.colorScheme === s.key ? s.color : "#222",
               background: settings.colorScheme === s.key ? `${s.color}22` : "transparent",
@@ -178,6 +179,11 @@ export function ControlPanel({ settings, onChange, colorScheme }: Props) {
           </button>
         ))}
       </div>
+      {settings.colorScheme === "map" && (
+        <div className="text-xs opacity-40 mt-1 leading-tight">
+          Real map view. Planes colored by altitude.
+        </div>
+      )}
     </div>
   );
 }
