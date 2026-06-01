@@ -23,7 +23,12 @@ export function useAircraftData(
     fetchingRef.current = true;
     setLoading(true);
     try {
-      const url = `https://api.airplanes.live/v2/point/${location.lat}/${location.lon}/${radiusNm}`;
+      const params = new URLSearchParams({
+        lat: String(location.lat),
+        lon: String(location.lon),
+        radiusNm: String(radiusNm),
+      });
+      const url = `/api/aircraft/point?${params}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data: AircraftResponse = await res.json();
