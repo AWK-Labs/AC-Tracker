@@ -9,11 +9,8 @@ export function useGeocoding() {
     setSearching(true);
     setSearchError(null);
     try {
-      const encoded = encodeURIComponent(query);
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`,
-        { headers: { "Accept-Language": "en" } }
-      );
+      const params = new URLSearchParams({ q: query });
+      const res = await fetch(`/api/geocode/search?${params}`);
       if (!res.ok) throw new Error("Geocoding request failed");
       const results = await res.json();
       if (!results.length) {
