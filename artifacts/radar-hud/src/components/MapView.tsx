@@ -25,6 +25,29 @@ function altitudeColor(altBaro?: number | string | null): string {
   return "#ff5252";
 }
 
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => {
+    switch (char) {
+      case "&":
+        return "&amp;";
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case '"':
+        return "&quot;";
+      case "'":
+        return "&#39;";
+      default:
+        return char;
+    }
+  });
+}
+
+function safeHeading(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
 function planeSvg(color: string, heading: number, selected: boolean): string {
   const size = selected ? 32 : 26;
   const stroke = selected ? "#ffffff" : "none";
@@ -44,9 +67,9 @@ function planeSvg(color: string, heading: number, selected: boolean): string {
 
 function makePlaneIcon(ac: Aircraft, selected: boolean): L.DivIcon {
   const color = altitudeColor(ac.alt_baro);
-  const heading = ac.track ?? 0;
+  const heading = safeHeading(ac.track);
   const size = selected ? 32 : 26;
-  const label = (ac.flight || ac.hex || "").trim();
+  const label = escapeHtml((ac.flight || ac.hex || "").trim());
   const alt =
     ac.alt_baro != null && ac.alt_baro !== "ground" && typeof ac.alt_baro === "number"
       ? `${Math.round(ac.alt_baro / 100) * 100}ft`
@@ -56,7 +79,7 @@ function makePlaneIcon(ac: Aircraft, selected: boolean): L.DivIcon {
   const speed = ac.gs != null ? `${Math.round(ac.gs)}kt` : "";
 
   return L.divIcon({
-    className: "",
+    className: "aircraft-marker-container",
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
     html: `<div style="position:relative;width:${size}px;height:${size}px;">
